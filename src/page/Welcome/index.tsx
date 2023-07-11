@@ -1,11 +1,23 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { StyleSheet, View, Image } from 'react-native'
-import icon_logo_main from '@/assets/icon_main_logo.png';
+import { StyleSheet, View, Text, Image } from 'react-native'
+import icon_logo_main from '@/assets/icon_main_logo.png'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 interface defineProps {
   children?: ReactNode
 }
 const Welcome: FC<defineProps> = () => {
+  const navigation = useNavigation<StackNavigationProp<any>>()
+  useEffect(() => {
+    setTimeout(() => {
+      startLoginPage()      
+    }, 3000)
+  }, [])
+  const startLoginPage = () => {
+    navigation.replace('Login')
+  }
+  
   return (
     <View style={styles.root}>
       <Image style={styles.logo_main} source={icon_logo_main} />

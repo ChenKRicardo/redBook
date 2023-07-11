@@ -15,6 +15,7 @@ import {
 } from '@react-navigation/stack'
 import Welcome from '@/page/Welcome'
 import Login from './src/page/Login'
+import HomeTab from './src/page/HomeTab'
 const Stack = createStackNavigator()
 function App(): JSX.Element {
   return (
@@ -37,6 +38,14 @@ function App(): JSX.Element {
           <Stack.Screen
             name="Login"
             component={Login}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.SlideFromRightIOS
+            }}
+          />
+          <Stack.Screen
+            name="HomeTab"
+            component={HomeTab}
             options={{
               headerShown: false,
               ...TransitionPresets.SlideFromRightIOS
