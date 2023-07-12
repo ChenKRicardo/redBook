@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, Image } from 'react-native'
 import icon_logo_main from '@/assets/icon_main_logo.png'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { load } from '@/utils/Storage'
 interface defineProps {
   children?: ReactNode
 }
@@ -11,13 +12,17 @@ const Welcome: FC<defineProps> = () => {
   const navigation = useNavigation<StackNavigationProp<any>>()
   useEffect(() => {
     setTimeout(() => {
-      startLoginPage()      
+      getUserInfo()
     }, 3000)
   }, [])
-  const startLoginPage = () => {
-    navigation.replace('Login')
+  const getUserInfo = async () => {
+    const cacheuserInfo = await load('userInfo')
+    if (cacheuserInfo && JSON.parse(cacheuserInfo)) {
+      navigation.replace('HomeTab')
+    } else {
+      navigation.replace('Login')
+    }
   }
-  
   return (
     <View style={styles.root}>
       <Image style={styles.logo_main} source={icon_logo_main} />

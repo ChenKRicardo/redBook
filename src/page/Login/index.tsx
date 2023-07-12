@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Linking,
   TextInput,
-  LayoutAnimation
+  LayoutAnimation,
+  ToastAndroid
 } from 'react-native'
 import { formatPhone, replaceBlank } from '@/utils/StringUtil'
 import { request } from '@/utils/request'
@@ -24,6 +25,9 @@ import icon_exchange from '@/assets/icon_exchange.png'
 import icon_wx from '@/assets/icon_wx.png'
 import icon_qq from '@/assets/icon_qq.webp'
 import icon_close_modal from '@/assets/icon_close_modal.png'
+import UserStore from '@/store/UserStore'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 interface defineProps {
   children?: ReactNode
 }
@@ -33,14 +37,19 @@ const Login: FC<defineProps> = () => {
   const [phone, setPhone] = useState<string>('')
   const [pwd, setPwd] = useState<string>('')
   const [eyeOpen, setEyeOpen] = useState<boolean>(true)
+  const navgation = useNavigation<StackNavigationProp<any>>()
   const onLoginPress = async () => {
     const canLogin = phone?.length === 13 && pwd?.length === 6
     if (!canLogin || !isChecked) {
       return
     }
-    const params = {}
-    const { data } = await request('login', params)
-    // console.log(data.code)
+    UserStore.requestLogin(replaceBlank(phone), pwd, (success) => {
+      if (success) {
+        navgation.replace('HomeTab')
+      } else {
+        ToastAndroid.show('登录失败，请检查用户名和密码', ToastAndroid.LONG)
+      }
+    })
   }
   const renderProtocol = () => {
     return (
