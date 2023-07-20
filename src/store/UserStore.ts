@@ -1,3 +1,4 @@
+import Loading from '@/components/widget/Loading'
 import { request } from '@/utils/request'
 import { save } from '@/utils/Storage'
 
@@ -8,6 +9,7 @@ class UserStore {
     pwd: string,
     callBack: (success: boolean) => void
   ) => {
+    Loading.show()
     try {
       const params = {
         name: phone,
@@ -15,7 +17,7 @@ class UserStore {
       }
       const { data } = await request('login', params)
       if (data) {
-        this.userInfo = data.data
+        this.userInfo = data
         save('userInfo', JSON.stringify(this.userInfo))
         callBack?.(true)
       } else {
@@ -26,6 +28,8 @@ class UserStore {
       console.log(error)
       this.userInfo = null
       callBack?.(false)
+    } finally {
+      Loading.hide()
     }
   }
 }

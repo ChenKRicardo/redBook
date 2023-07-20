@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import Apis from '../api/Apis'
 
 const instance = axios.create({
-  baseURL: 'https://mock.mengxuegu.com/mock/64ad1431d87ff84a6489ef78/api/',
+  baseURL: 'https://mock.presstime.cn/mock/64b63147b9e270cc51cad429/api',
   timeout: 10 * 1000
 })
 

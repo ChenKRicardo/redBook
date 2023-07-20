@@ -28,6 +28,7 @@ import icon_close_modal from '@/assets/icon_close_modal.png'
 import UserStore from '@/store/UserStore'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import Toast from '@/components/widget/Toast'
 interface defineProps {
   children?: ReactNode
 }
@@ -47,7 +48,7 @@ const Login: FC<defineProps> = () => {
       if (success) {
         navgation.replace('HomeTab')
       } else {
-        ToastAndroid.show('登录失败，请检查用户名和密码', ToastAndroid.LONG)
+        Toast.show('登录失败，请检查用户名和密码')
       }
     })
   }
