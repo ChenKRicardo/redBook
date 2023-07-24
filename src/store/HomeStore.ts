@@ -7,7 +7,7 @@ export default class HomeStore {
   page: number = 1
   @observable homeList: ArticleSimple[] = []
   @observable refreshing: boolean = false
-  @observable categoryList: Category[] = []
+  @observable categoryList: Category[] = DEFAULT_CATEGORY_LIST
 
   @action
   resetPage = () => {
@@ -45,8 +45,7 @@ export default class HomeStore {
     }
   }
   getCategoryList = async () => {
-    const cacheListStr = await load('categoryList')
-
+    const cacheListStr = await load('categoryList')    
     if (cacheListStr) {
       const cacheList = JSON.parse(cacheListStr)
       if (cacheList?.length) {

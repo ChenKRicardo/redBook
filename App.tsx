@@ -16,6 +16,7 @@ import {
 import Welcome from '@/page/Welcome'
 import Login from './src/page/Login'
 import HomeTab from './src/page/HomeTab'
+import ArticleDetail from '@/page/ArticleDetail'
 const Stack = createStackNavigator()
 function App(): JSX.Element {
   return (
@@ -46,6 +47,14 @@ function App(): JSX.Element {
           <Stack.Screen
             name="HomeTab"
             component={HomeTab}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.SlideFromRightIOS
+            }}
+          />
+          <Stack.Screen
+            name="ArticleDetail"
+            component={ArticleDetail}
             options={{
               headerShown: false,
               ...TransitionPresets.SlideFromRightIOS

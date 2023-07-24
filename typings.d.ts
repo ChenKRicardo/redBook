@@ -5,6 +5,13 @@ declare module '*.webp'
 declare module '*.json'
 declare module '*.js'
 
+type UserInfo = {
+  name: string
+  email: string
+  age: number
+  address: string
+  avatar: string
+}
 type ArticleComment = {
   userName: string
   avatarUrl: string

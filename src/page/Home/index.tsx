@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import type { FC, ReactNode } from 'react'
 import {
   StyleSheet,
@@ -6,7 +6,8 @@ import {
   Text,
   FlatList,
   Dimensions,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native'
 import HomeStore from '@/store/HomeStore'
 import { observer, useLocalStore } from 'mobx-react'
@@ -15,24 +16,20 @@ import FlowList from '@/components/flowlist/FlowList.js'
 import ResizeImage from '@/components/ResizeImage'
 import TitleBar from '@/components/TitleBar'
 import CategoryList from './components/CategoryList'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 interface defineProps {
   children?: ReactNode
 }
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const Home: FC<defineProps> = () => {
   const homeStore = useLocalStore(() => new HomeStore())
+  const navigation = useNavigation<StackNavigationProp<any>>()
   const initCategoryList = homeStore.categoryList.filter((i) => i.isAdd)
-  const [categoryList, setCategoryList] = useState(initCategoryList)
   useEffect(() => {
     homeStore.requestHomeList()
     homeStore.getCategoryList()
-    console.log(homeStore.categoryList,8888)
-
-    setCategoryList(homeStore.categoryList.filter((i) => i.isAdd))
   }, [])
-  useEffect(() => {
-    setCategoryList(homeStore.categoryList.filter((i) => i.isAdd))
-  }, [homeStore.categoryList])
   const refreshNewData = () => {
     homeStore.resetPage()
     homeStore.requestHomeList()
@@ -40,6 +37,12 @@ const Home: FC<defineProps> = () => {
   const loadMoreData = () => {
     homeStore.requestHomeList()
   }
+  const pressArticleItem = useCallback(
+    (article: ArticleSimple) => () => {
+      navigation.push('ArticleDetail', { id: article.id })
+    },
+    []
+  )
   const Footer = () => <Text style={styles.footerTxt}>正在加载，请稍后！</Text>
   const renderItem = ({
     item,
@@ -49,16 +52,21 @@ const Home: FC<defineProps> = () => {
     index: number
   }) => {
     return (
-      <View style={styles.item}>
-        <ResizeImage uri={item.image400} />
-        <Text style={styles.titleTxt}>{item.title}</Text>
-        <View style={styles.nameLayout}>
-          <Image style={styles.avatarImg} source={{ uri: item.avatarUrl200 }} />
-          <Text style={styles.nameTxt}>{item.userName}</Text>
-          <Image style={styles.heart} source={icon_heart_empty} />
-          <Text style={styles.countTxt}>{item.favoriteCount}</Text>
+      <TouchableOpacity style={styles.item} onPress={pressArticleItem(item)}>
+        <View>
+          <ResizeImage uri={item.image400} />
+          <Text style={styles.titleTxt}>{item.title}</Text>
+          <View style={styles.nameLayout}>
+            <Image
+              style={styles.avatarImg}
+              source={{ uri: item.avatarUrl200 }}
+            />
+            <Text style={styles.nameTxt}>{item.userName}</Text>
+            <Image style={styles.heart} source={icon_heart_empty} />
+            <Text style={styles.countTxt}>{item.favoriteCount}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
   return (
@@ -79,7 +87,7 @@ const Home: FC<defineProps> = () => {
         ListFooterComponent={<Footer />}
         ListHeaderComponent={
           <CategoryList
-            categoryList={categoryList}
+            categoryList={initCategoryList}
             allCategoryList={homeStore.categoryList}
           />
         }
