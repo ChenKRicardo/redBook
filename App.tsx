@@ -17,6 +17,7 @@ import Welcome from '@/page/Welcome'
 import Login from './src/page/Login'
 import HomeTab from './src/page/HomeTab'
 import ArticleDetail from '@/page/ArticleDetail'
+import SearchGoods from '@/page/SearchGoods'
 const Stack = createStackNavigator()
 function App(): JSX.Element {
   return (
@@ -58,6 +59,14 @@ function App(): JSX.Element {
             options={{
               headerShown: false,
               ...TransitionPresets.SlideFromRightIOS
+            }}
+          />
+          <Stack.Screen
+            name="SearchGoods"
+            component={SearchGoods}
+            options={{
+              headerShown: false,
+              presentation:'transparentModal'
             }}
           />
         </Stack.Navigator>
