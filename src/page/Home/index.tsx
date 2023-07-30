@@ -85,6 +85,7 @@ const Home: FC<defineProps> = () => {
         onEndReachedThreshold={0.1}
         onEndReached={loadMoreData}
         ListFooterComponent={<Footer />}
+        stickyHeaderIndices={[0]}
         ListHeaderComponent={
           <CategoryList
             categoryList={initCategoryList}
