@@ -45,7 +45,10 @@ const withHotUpdate = (WrappedComponent:any) => {
       }
     }
     useEffect(()=>{
-      checkPatch()
+      // __DEV__ 的值为 true，表示当前是在开发环境中运行
+      if(!__DEV__){
+        checkPatch()
+      }
     },[])
     useEffect(() => {
       // 处理更新成功逻辑
