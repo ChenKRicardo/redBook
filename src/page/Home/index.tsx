@@ -19,20 +19,12 @@ import TitleBar from '@/components/TitleBar'
 import CategoryList from './components/CategoryList'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import _updateConfig from '../../../update.json'
-import {
-  checkUpdate,
-  downloadUpdate,
-  isFirstTime,
-  isRolledBack,
-  markSuccess,
-  switchVersionLater
-} from 'react-native-update'
+import withHotUpdate from '@/components/withHotUpdate'
+
 interface defineProps {
   children?: ReactNode
 }
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const { appKey } = (_updateConfig as any)[Platform.OS]
 
 const Home: FC<defineProps> = () => {
   const homeStore = useLocalStore(() => new HomeStore())
@@ -41,33 +33,8 @@ const Home: FC<defineProps> = () => {
   useEffect(() => {
     homeStore.requestHomeList()
     homeStore.getCategoryList()
-    checkPatch()
-    if (isFirstTime) {
-      // 必须调用此更新成功标记方法
-      // 否则默认更新失败，下一次启动会自动回滚
-      markSuccess()
-      console.log('更新完成')
-    } else if (isRolledBack) {
-      console.log('刚刚更新失败了,版本被回滚.')
-    }
   }, [])
-  // 检查补丁更新
-  const checkPatch = async () => {
-    const info: any = await checkUpdate(appKey)
-    const { update } = info
-    if (update) {
-      const hash = await downloadUpdate(
-        info,
-        // 下载回调为可选参数，从v5.8.3版本开始加入
-        {
-          onDownloadProgress: ({ received, total }) => {}
-        }
-      )
-      if (hash) {
-        switchVersionLater(hash)
-      }
-    }
-  }
+  
   const refreshNewData = () => {
     homeStore.resetPage()
     homeStore.requestHomeList()
@@ -134,7 +101,7 @@ const Home: FC<defineProps> = () => {
     </View>
   )
 }
-export default observer(Home)
+export default withHotUpdate(observer(Home))
 
 const styles = StyleSheet.create({
   root: {
